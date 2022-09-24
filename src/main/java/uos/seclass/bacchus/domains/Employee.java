@@ -23,11 +23,11 @@ public class Employee {
     @Column(name="employee_num")
     private int employeeNum;
 
-    /* Foreign Key */
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_num", nullable = false, insertable = false, updatable = false)
-    private List<Order> orders;
-    /* */
+    @Column(nullable = false, unique = true, length = 16)
+    private String id;
+
+    @Column(nullable = false, unique = false, length = 128)
+    private String pw;
 
     @Column(nullable = false, length = 16)
     private String name;

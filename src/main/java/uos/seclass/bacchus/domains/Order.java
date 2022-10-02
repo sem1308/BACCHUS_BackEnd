@@ -2,6 +2,7 @@ package uos.seclass.bacchus.domains;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.*;
 
@@ -32,9 +33,13 @@ public class Order {
     @JoinColumn(name = "employee_num", nullable = false)
     private Employee employee;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_num", nullable = false, insertable = false, updatable = false)
-    private List<Dinner> dinners;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "dinner_num", nullable = false)
+    private Set<Dinner> dinners;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "style_code", nullable = false)
+    private Style style;
     /* */
 
     @Column(name="total_price", nullable = false)

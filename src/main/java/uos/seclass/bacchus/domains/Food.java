@@ -8,6 +8,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+import java.util.Set;
+
 @Entity(name = "Foods")
 @AllArgsConstructor()
 @NoArgsConstructor()
@@ -20,12 +23,6 @@ public class Food {
     @Column(name="food_num")
     private int foodNum;
 
-    /* Foreign Key */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dinner_num", nullable = false)
-    private Dinner dinner;
-    /* */
-
     @Column(name="name", nullable = false, length = 16)
     private String name;
 
@@ -34,8 +31,5 @@ public class Food {
 
     @Column(name="type", nullable = false, length = 10)
     private String type;
-
-    @Column(name="num_food", nullable = false)
-    private int count;
 }
 

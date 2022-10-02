@@ -2,6 +2,7 @@ package uos.seclass.bacchus.domains;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.*;
 
@@ -23,19 +24,10 @@ public class Dinner {
     @Column(name="dinner_num")
     private int dinnerNum;
 
-    /* Foreign Key */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_num", nullable = false)
-    private Order order;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "style_code", nullable = false)
-    private Style style;
-
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dinner_num", nullable = false, insertable = false, updatable = false)
-    private List<Food> foods;
-    /* */
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "food_num", nullable = false)
+    private Set<Food> foods;
+    /*  */
 
     @Column(name="name", nullable = false, length = 16)
     private String name;
@@ -45,9 +37,5 @@ public class Dinner {
 
     @Column(name="num_people", nullable = false)
     private int numPeople;
-
-    @Column(name="order_time", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date orderTime;
 }
 

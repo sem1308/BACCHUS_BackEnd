@@ -1,5 +1,6 @@
 package uos.seclass.bacchus.controllers;
 
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -7,11 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import uos.seclass.bacchus.domains.Member;
 import uos.seclass.bacchus.dtos.InsertMemberDTO;
 import uos.seclass.bacchus.dtos.UpdateMemberDTO;
-import uos.seclass.bacchus.exceptions.ResourceNotFoundException;
-import uos.seclass.bacchus.mappers.MemberMapper;
 import uos.seclass.bacchus.services.MemberService;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +26,7 @@ public class MemberController {
 
     @GetMapping()
     @ResponseStatus(value = HttpStatus.OK)
-    //@ApiOperation(value = "Member 리스트 조회", protocols = "http")
+    @ApiOperation(value = "Member 리스트 조회", protocols = "http")
     public List<Member> lookUpMemberList() {
         List<Member> members = memberService.findAll();
         return members;

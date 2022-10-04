@@ -1,11 +1,10 @@
 package uos.seclass.bacchus.domains;
 
-import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,9 +23,10 @@ public class Dinner {
     @Column(name="dinner_num")
     private int dinnerNum;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "food_num", nullable = false)
-    private Set<Food> foods;
+    /* Foreign Key */
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "dinner_num", nullable = false, updatable = false, insertable = false)
+    private Set<FoodDinnerCount> foodCounts;
     /*  */
 
     @Column(name="name", nullable = false, length = 16)

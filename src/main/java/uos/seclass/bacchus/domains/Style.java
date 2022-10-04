@@ -21,12 +21,6 @@ public class Style {
     @Column(name="style_code", length = 10)
     private String styleCode;
 
-    /* Foreign Key */
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "style_code", nullable = false, insertable = false, updatable = false)
-    private List<Order> orders;
-    /*  */
-
     @Column(nullable = false, length = 64)
     private String content;
 }

@@ -2,6 +2,7 @@ package uos.seclass.bacchus.domains;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,17 +18,21 @@ import java.util.Set;
 @Setter
 @Getter
 @Builder
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Food {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="food_num")
-    private int foodNum;
+    private Integer foodNum;
 
     @Column(name="name", nullable = false, length = 16)
     private String name;
 
+    @Column(name="stockCount", nullable = false)
+    private Integer stockCount;
+
     @Column(name="price", nullable = false)
-    private int price;
+    private Integer price;
 
     @Column(name="type", nullable = false, length = 10)
     private String type;

@@ -5,8 +5,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uos.seclass.bacchus.domains.Dinner;
-import uos.seclass.bacchus.dtos.InsertDinnerDTO;
+import uos.seclass.bacchus.dtos.InsertDinnerForm;
+import uos.seclass.bacchus.dtos.PrintDinnerDTO;
 import uos.seclass.bacchus.services.DinnerService;
+
 import java.util.List;
 
 @RestController()
@@ -29,14 +31,14 @@ public class DinnerController {
     }
 
     @GetMapping("/{num}")
-    public ResponseEntity<Dinner> lookUpDinner(@PathVariable("num") Integer num) {
-        Dinner order = dinnerService.findOne(num);
-        return new ResponseEntity<>(order, HttpStatus.OK);
+    public ResponseEntity<PrintDinnerDTO> lookUpDinner(@PathVariable("num") Integer num) {
+        PrintDinnerDTO dinner = dinnerService.findOne(num);
+        return new ResponseEntity<>(dinner, HttpStatus.OK);
     }
 
     @PostMapping()
-    public ResponseEntity register(@RequestBody InsertDinnerDTO dinnerDTO) {
-        dinnerService.insert(dinnerDTO);
+    public ResponseEntity register(@RequestBody InsertDinnerForm dinnerForm) {
+        dinnerService.insert(dinnerForm.getInsertDinnerDTO(), dinnerForm.getFoodCountDTOS());
         return new ResponseEntity<>("register success", HttpStatus.OK);
     }
 }

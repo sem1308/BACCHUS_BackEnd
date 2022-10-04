@@ -5,11 +5,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uos.seclass.bacchus.domains.Order;
-import uos.seclass.bacchus.dtos.InsertOrderDTO;
+import uos.seclass.bacchus.dtos.InsertOrderForm;
 import uos.seclass.bacchus.services.OrderService;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController()
 @RequestMapping("/order")
@@ -37,8 +36,8 @@ public class OrderController {
     }
 
     @PostMapping()
-    public ResponseEntity register(@RequestBody InsertOrderDTO orderDTO) {
-        orderService.insert(orderDTO);
+    public ResponseEntity register(@RequestBody InsertOrderForm orderForm) {
+        orderService.insert(orderForm.getInsertOrderDTO(), orderForm.getFoodCountDTOS());
         return new ResponseEntity<>("register success", HttpStatus.OK);
     }
 }

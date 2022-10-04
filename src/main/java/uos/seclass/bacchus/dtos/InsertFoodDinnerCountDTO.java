@@ -7,11 +7,9 @@ import lombok.*;
 @Setter
 @Getter
 @Builder
-public class InsertDinnerDTO {
-    private String name;
+public class InsertFoodDinnerCountDTO {
+    private int foodNum;
 
-    private String extraContent;
-
-    private int numPeople;
+    private int count;
 }
 

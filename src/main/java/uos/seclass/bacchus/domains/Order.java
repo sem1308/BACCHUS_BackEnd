@@ -27,8 +27,8 @@ public class Order {
     /* Foreign Key */
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_num", nullable = false)
-    private Member member;
+    @JoinColumn(name = "customer_num", nullable = false)
+    private Customer customer;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "dinner_num", nullable = false)
@@ -43,11 +43,15 @@ public class Order {
     private Style style;
     /* */
 
-    @Column(name="total_price", nullable = false)
-    private int totalPrice;
+    @Column(name="state", nullable = false)
+    private String state;
 
     @Column(name="order_time", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date orderTime;
+
+    @Column(name="delivered_time", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date deliveredTime;
 }
 

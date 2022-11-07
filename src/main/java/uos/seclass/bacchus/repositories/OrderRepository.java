@@ -10,5 +10,5 @@ import uos.seclass.bacchus.domains.Order;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Integer>{
-    public List<Order> findByMember(int memberNum);
+    public List<Order> findByCustomer(int customerNum);
 }

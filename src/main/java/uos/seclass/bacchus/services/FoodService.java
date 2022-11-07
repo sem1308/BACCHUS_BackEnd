@@ -5,9 +5,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import uos.seclass.bacchus.domains.Customer;
 import uos.seclass.bacchus.domains.Food;
 import uos.seclass.bacchus.dtos.InsertFoodDTO;
+import uos.seclass.bacchus.dtos.UpdateCustomerDTO;
+import uos.seclass.bacchus.dtos.UpdateFoodDTO;
 import uos.seclass.bacchus.exceptions.ResourceNotFoundException;
+import uos.seclass.bacchus.mappers.CustomerMapper;
 import uos.seclass.bacchus.mappers.FoodMapper;
 import uos.seclass.bacchus.repositories.FoodRepository;
 
@@ -28,9 +32,9 @@ public class FoodService {
     public List<Food> findAll() {
         List<Food> foods = foodRepo.findAll();
 
-        if (foods.isEmpty()) {
-            throw new ResourceNotFoundException("Not found Members");
-        }
+//        if (foods.isEmpty()) {
+//            throw new ResourceNotFoundException("Not found Foods");
+//        }
 
         return foods;
     }
@@ -45,6 +49,15 @@ public class FoodService {
         Food newFood = FoodMapper.INSTANCE.toEntity(foodDTO);
 
         newFood = foodRepo.save(newFood);
+
+        return newFood;
+    }
+
+    public Food update(Integer num, UpdateFoodDTO foodDTO) {
+
+        Food food = foodRepo.findById(num).orElseThrow(() -> new ResourceNotFoundException("Not found Member with id = " + num));
+        FoodMapper.INSTANCE.updateFromDto(foodDTO, food);
+        Food newFood = foodRepo.save(food);
 
         return newFood;
     }

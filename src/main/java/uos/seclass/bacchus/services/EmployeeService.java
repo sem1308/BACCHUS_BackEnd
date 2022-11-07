@@ -8,16 +8,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import uos.seclass.bacchus.domains.Employee;
-import uos.seclass.bacchus.domains.Member;
 import uos.seclass.bacchus.dtos.InsertEmployeeDTO;
-import uos.seclass.bacchus.dtos.InsertMemberDTO;
 import uos.seclass.bacchus.dtos.UpdateEmployeeDTO;
-import uos.seclass.bacchus.dtos.UpdateMemberDTO;
 import uos.seclass.bacchus.exceptions.ResourceNotFoundException;
 import uos.seclass.bacchus.mappers.EmployeeMapper;
-import uos.seclass.bacchus.mappers.MemberMapper;
 import uos.seclass.bacchus.repositories.EmployeeRepository;
-import uos.seclass.bacchus.repositories.MemberRepository;
 
 import java.util.Date;
 import java.util.List;

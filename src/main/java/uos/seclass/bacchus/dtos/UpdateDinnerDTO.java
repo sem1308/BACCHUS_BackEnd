@@ -7,13 +7,10 @@ import lombok.*;
 @Setter
 @Getter
 @Builder
-public class InsertFoodDTO {
+public class UpdateDinnerDTO {
     private String name;
 
-    private int stock;
+    private String extraContent;
 
-    private int price;
-
-    private String type;
+    private int numPeople;
 }
-

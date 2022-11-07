@@ -20,21 +20,21 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity(name = "Members")
+@Entity(name = "Customers")
 @AllArgsConstructor()
 @NoArgsConstructor()
 @Setter
 @Getter
 @Builder
-public class Member {
+public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="member_num")
-    private int memberNum;
+    @Column(name="customer_num")
+    private int customerNum;
 
     /* Foreign Key */
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_num", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "customer_num", nullable = false, insertable = false, updatable = false)
     private List<Order> orders;
     /* */
 

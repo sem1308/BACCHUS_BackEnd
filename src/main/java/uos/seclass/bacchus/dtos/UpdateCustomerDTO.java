@@ -11,15 +11,12 @@ import lombok.Setter;
 @Setter
 @Getter
 @Builder
-public class InsertMemberDTO {
+public class UpdateCustomerDTO {
     private String id;
 
     private String pw;
-
-    private String name;
 
     private String address;
 
     private String cardNum;
 }
-

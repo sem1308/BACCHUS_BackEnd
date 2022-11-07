@@ -9,9 +9,9 @@ import java.util.Set;
 @Setter
 @Getter
 @Builder
-public class InsertDinnerForm {
-    private Set<InsertFoodDinnerCountDTO> foodCountDTOs;
+public class UpdateDinnerForm {
+    private Set<UpdateFoodDinnerCountDTO> foodCountDTOs;
 
-    private InsertDinnerDTO insertDinnerDTO;
+    private UpdateDinnerDTO UpdateDinnerDTO;
 }
 

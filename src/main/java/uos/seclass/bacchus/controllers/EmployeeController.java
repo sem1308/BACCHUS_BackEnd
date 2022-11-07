@@ -5,13 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uos.seclass.bacchus.domains.Employee;
-import uos.seclass.bacchus.domains.Member;
 import uos.seclass.bacchus.dtos.InsertEmployeeDTO;
-import uos.seclass.bacchus.dtos.InsertMemberDTO;
 import uos.seclass.bacchus.dtos.UpdateEmployeeDTO;
-import uos.seclass.bacchus.dtos.UpdateMemberDTO;
 import uos.seclass.bacchus.services.EmployeeService;
-import uos.seclass.bacchus.services.MemberService;
 
 import java.util.List;
 import java.util.Map;

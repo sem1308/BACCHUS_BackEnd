@@ -8,13 +8,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import uos.seclass.bacchus.domains.Dinner;
 import uos.seclass.bacchus.domains.Food;
 import uos.seclass.bacchus.domains.FoodDinnerCount;
-import uos.seclass.bacchus.dtos.InsertDinnerDTO;
-import uos.seclass.bacchus.dtos.InsertFoodDinnerCountDTO;
-import uos.seclass.bacchus.dtos.PrintDinnerDTO;
-import uos.seclass.bacchus.dtos.PrintFoodDinnerCountDTO;
+import uos.seclass.bacchus.dtos.*;
 import uos.seclass.bacchus.exceptions.ResourceNotFoundException;
 import uos.seclass.bacchus.mappers.DinnerMapper;
 import uos.seclass.bacchus.mappers.FoodDinnerCountMapper;
+import uos.seclass.bacchus.mappers.FoodMapper;
 import uos.seclass.bacchus.repositories.DinnerRepository;
 import uos.seclass.bacchus.repositories.FoodDinnerCountRepository;
 import uos.seclass.bacchus.repositories.FoodRepository;
@@ -42,9 +40,9 @@ public class DinnerService {
     public List<Dinner> findAll() {
         List<Dinner> dinners = dinnerRepo.findAll();
 
-        if (dinners.isEmpty()) {
-            throw new ResourceNotFoundException("Not found Members");
-        }
+//        if (dinners.isEmpty()) {
+//            throw new ResourceNotFoundException("Not found Dinners");
+//        }
 
         return dinners;
     }
@@ -78,5 +76,34 @@ public class DinnerService {
         });
 
         return newDinner;
+    }
+
+    public Dinner update(Integer num, UpdateDinnerDTO dinnerDTO, Set<UpdateFoodDinnerCountDTO> foodCountDTOs) {
+
+        Dinner dinner = dinnerRepo.findById(num).orElseThrow(() -> new ResourceNotFoundException("Not found Dinner with id = " + num));
+        DinnerMapper.INSTANCE.updateFromDto(dinnerDTO, dinner);
+
+        Dinner modifiedDinner = dinnerRepo.save(dinner);
+
+        foodCountDTOs.forEach(foodCountDTO -> {
+            Food food = foodRepo.findById(foodCountDTO.getFoodNum()).get();
+            Integer fcNum = foodCountDTO.getFoodDinnerCountNum();
+            FoodDinnerCount foodCount = new FoodDinnerCount();
+            if(fcNum != -1){
+                foodCount = foodCountRepo.findById(foodCountDTO.getFoodDinnerCountNum())
+                        .orElseThrow(() -> new ResourceNotFoundException("Not found FoodCount with id = " + num));
+                FoodDinnerCountMapper.INSTANCE.updateFromDto(foodCountDTO, foodCount);
+                foodCount.setFood(food);
+            }else{
+                InsertFoodDinnerCountDTO dto = new InsertFoodDinnerCountDTO();
+                dto.setCount(foodCountDTO.getCount());
+                foodCount = FoodDinnerCountMapper.INSTANCE.toEntity(dto);
+                foodCount.setFood(food);
+                foodCount.setDinner(modifiedDinner);
+            }
+            foodCountRepo.save(foodCount);
+        });
+
+        return modifiedDinner;
     }
 }

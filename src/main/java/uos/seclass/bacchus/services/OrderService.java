@@ -24,28 +24,28 @@ public class OrderService {
     private final FoodRepository foodRepo;
     private final FoodOrderCountRepository foodCountRepo;
     private final DinnerRepository dinnerRepo;
-    private final MemberRepository memberRepo;
+    private final CustomerRepository customerRepo;
     private final StyleRepository styleRepo;
 
     @Autowired
     public OrderService(OrderRepository orderRepo, FoodOrderCountRepository foodCountRepo,
-                        FoodRepository foodRepo, DinnerRepository dinnerRepo, MemberRepository memberRepo, StyleRepository styleRepo) {
+                        FoodRepository foodRepo, DinnerRepository dinnerRepo, CustomerRepository customerRepo, StyleRepository styleRepo) {
         this.orderRepo = orderRepo;
         this.foodRepo = foodRepo;
         this.foodCountRepo = foodCountRepo;
         this.dinnerRepo = dinnerRepo;
-        this.memberRepo = memberRepo;
+        this.customerRepo = customerRepo;
         this.styleRepo = styleRepo;
     }
 
     @GetMapping()
     @ResponseStatus(value = HttpStatus.OK)
-    //@ApiOperation(value = "Member 리스트 조회", protocols = "http")
+    //@ApiOperation(value = "Order 리스트 조회", protocols = "http")
     public List<Order> findAll() {
         List<Order> orders = orderRepo.findAll();
 
         if (orders.isEmpty()) {
-            throw new ResourceNotFoundException("Not found Members");
+            throw new ResourceNotFoundException("Not found Orders");
         }
 
         return orders;
@@ -56,8 +56,8 @@ public class OrderService {
         return order;
     }
 
-    public List<Order> findAllByMember(Integer num) {
-        List<Order> order = orderRepo.findByMember(num);
+    public List<Order> findAllByCustomer(Integer num) {
+        List<Order> order = orderRepo.findByCustomer(num);
         return order;
     }
 
@@ -70,7 +70,7 @@ public class OrderService {
 
         newOrder.setDinners(dinners);
         newOrder.setStyle(styleRepo.findByStyleCode(orderDTO.getStyleCode()));
-        newOrder.setMember(memberRepo.findById(orderDTO.getMemberNum()).get());
+        newOrder.setCustomer(customerRepo.findById(orderDTO.getMemberNum()).get());
         newOrder.setOrderTime(new Date());
         System.out.println(newOrder.getStyle().getStyleCode());
         orderRepo.save(newOrder);

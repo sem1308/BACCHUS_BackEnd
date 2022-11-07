@@ -7,7 +7,7 @@ import lombok.*;
 @Setter
 @Getter
 @Builder
-public class InsertFoodDTO {
+public class UpdateFoodDTO {
     private String name;
 
     private int stock;
@@ -16,4 +16,3 @@ public class InsertFoodDTO {
 
     private String type;
 }
-

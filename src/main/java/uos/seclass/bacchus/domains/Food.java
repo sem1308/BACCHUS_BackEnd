@@ -28,8 +28,8 @@ public class Food {
     @Column(name="name", nullable = false, length = 16)
     private String name;
 
-    @Column(name="stockCount", nullable = false)
-    private Integer stockCount;
+    @Column(name="stock", nullable = false)
+    private Integer stock;
 
     @Column(name="price", nullable = false)
     private Integer price;

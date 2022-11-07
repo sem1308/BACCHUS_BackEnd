@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uos.seclass.bacchus.domains.Food;
 import uos.seclass.bacchus.dtos.InsertFoodDTO;
+import uos.seclass.bacchus.dtos.UpdateFoodDTO;
 import uos.seclass.bacchus.services.FoodService;
 
 import java.util.List;
@@ -39,5 +40,12 @@ public class FoodController {
     public ResponseEntity register(@RequestBody InsertFoodDTO foodDTO) {
         foodService.insert(foodDTO);
         return new ResponseEntity<>("register success", HttpStatus.OK);
+    }
+
+    @PutMapping("/{num}")
+    public ResponseEntity update(@PathVariable("num") Integer num, @RequestBody UpdateFoodDTO foodDTO) {
+        foodService.update(num,foodDTO);
+
+        return new ResponseEntity<>("update success", HttpStatus.OK);
     }
 }

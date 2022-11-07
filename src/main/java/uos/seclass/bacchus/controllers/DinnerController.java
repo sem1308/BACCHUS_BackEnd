@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import uos.seclass.bacchus.domains.Dinner;
 import uos.seclass.bacchus.dtos.InsertDinnerForm;
 import uos.seclass.bacchus.dtos.PrintDinnerDTO;
+import uos.seclass.bacchus.dtos.UpdateDinnerForm;
+import uos.seclass.bacchus.dtos.UpdateFoodDTO;
 import uos.seclass.bacchus.services.DinnerService;
 
 import java.util.List;
@@ -38,7 +40,14 @@ public class DinnerController {
 
     @PostMapping()
     public ResponseEntity register(@RequestBody InsertDinnerForm dinnerForm) {
-        dinnerService.insert(dinnerForm.getInsertDinnerDTO(), dinnerForm.getFoodCountDTOS());
+        dinnerService.insert(dinnerForm.getInsertDinnerDTO(), dinnerForm.getFoodCountDTOs());
         return new ResponseEntity<>("register success", HttpStatus.OK);
+    }
+
+    @PutMapping("/{num}")
+    public ResponseEntity update(@PathVariable("num") Integer num, @RequestBody UpdateDinnerForm dinnerForm) {
+        dinnerService.update(num,dinnerForm.getUpdateDinnerDTO(), dinnerForm.getFoodCountDTOs());
+
+        return new ResponseEntity<>("update success", HttpStatus.OK);
     }
 }

@@ -47,8 +47,8 @@ public class CustomerController {
     @PostMapping("/login")
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity login(@RequestBody Map<String, String> loginInfo) {
-        customerService.login(loginInfo);
-        return new ResponseEntity<>("login success", HttpStatus.OK);
+        Customer customer = customerService.login(loginInfo);
+        return new ResponseEntity<>(customer, HttpStatus.OK);
     }
 
     @PutMapping("/{num}")

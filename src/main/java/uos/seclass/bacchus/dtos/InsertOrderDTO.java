@@ -10,12 +10,18 @@ import java.util.Set;
 @Getter
 @Builder
 public class InsertOrderDTO {
-    private int memberNum;
+    private int customerNum;
 
     private Set<Integer> dinnerNum;
 
     private String styleCode;
 
     private int totalPrice;
+
+    private Date wantedDeliveredTime;
+
+    private String address;
+
+    private String cardNum;
 }
 

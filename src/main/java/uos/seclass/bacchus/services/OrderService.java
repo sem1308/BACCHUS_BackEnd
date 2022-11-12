@@ -70,11 +70,13 @@ public class OrderService {
 
         newOrder.setDinners(dinners);
         newOrder.setStyle(styleRepo.findByStyleCode(orderDTO.getStyleCode()));
-        newOrder.setCustomer(customerRepo.findById(orderDTO.getMemberNum()).get());
+        newOrder.setCustomer(customerRepo.findById(orderDTO.getCustomerNum()).get());
         newOrder.setOrderTime(new Date());
-        System.out.println(newOrder.getStyle().getStyleCode());
+        newOrder.setDeliveredTime(new Date());
+        newOrder.setState("OS");
         orderRepo.save(newOrder);
 
+        System.out.println(foodCountDTOs.size());
         foodCountDTOs.forEach(foodCountDTO -> {
             Food food = foodRepo.findById(foodCountDTO.getFoodNum()).get();
             FoodOrderCount newFoodCount = FoodOrderCountMapper.INSTANCE.toEntity(foodCountDTO);
@@ -82,6 +84,7 @@ public class OrderService {
             newFoodCount.setOrder(newOrder);
             foodCountRepo.save(newFoodCount);
         });
+
 
         return newOrder;
     }

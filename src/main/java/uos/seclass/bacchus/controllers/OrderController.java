@@ -37,7 +37,7 @@ public class OrderController {
 
     @PostMapping()
     public ResponseEntity register(@RequestBody InsertOrderForm orderForm) {
-        orderService.insert(orderForm.getInsertOrderDTO(), orderForm.getFoodCountDTOS());
+        orderService.insert(orderForm.getInsertOrderDTO(), orderForm.getFoodCountDTOs());
         return new ResponseEntity<>("register success", HttpStatus.OK);
     }
 }

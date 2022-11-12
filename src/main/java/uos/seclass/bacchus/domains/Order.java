@@ -50,8 +50,21 @@ public class Order {
     @Temporal(TemporalType.TIMESTAMP)
     private Date orderTime;
 
-    @Column(name="delivered_time", nullable = false)
+    @Column(name="delivered_time", nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
     private Date deliveredTime;
+
+    @Column(name="wanted_delivered_time", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date wantedDeliveredTime;
+
+    @Column(name="total_price", nullable = false)
+    private int totalPrice;
+
+    @Column(name="address", nullable = false)
+    private String address;
+
+    @Column(name="card_num", nullable = false)
+    private String cardNum;
 }
 

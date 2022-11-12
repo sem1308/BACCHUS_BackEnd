@@ -10,7 +10,7 @@ import java.util.Set;
 @Getter
 @Builder
 public class InsertOrderForm {
-    private Set<InsertFoodOrderCountDTO> foodCountDTOS;
+    private Set<InsertFoodOrderCountDTO> foodCountDTOs;
 
     private InsertOrderDTO insertOrderDTO;
 }

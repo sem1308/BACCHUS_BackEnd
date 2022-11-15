@@ -1,10 +1,7 @@
 package uos.seclass.bacchus.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import uos.seclass.bacchus.domains.Dinner;
 import uos.seclass.bacchus.domains.Food;
 import uos.seclass.bacchus.domains.FoodDinnerCount;
@@ -12,7 +9,6 @@ import uos.seclass.bacchus.dtos.*;
 import uos.seclass.bacchus.exceptions.ResourceNotFoundException;
 import uos.seclass.bacchus.mappers.DinnerMapper;
 import uos.seclass.bacchus.mappers.FoodDinnerCountMapper;
-import uos.seclass.bacchus.mappers.FoodMapper;
 import uos.seclass.bacchus.repositories.DinnerRepository;
 import uos.seclass.bacchus.repositories.FoodDinnerCountRepository;
 import uos.seclass.bacchus.repositories.FoodRepository;
@@ -34,15 +30,8 @@ public class DinnerService {
         this.foodCountRepo = foodCountRepo;
     }
 
-    @GetMapping()
-    @ResponseStatus(value = HttpStatus.OK)
-    //@ApiOperation(value = "Dinner 리스트 조회", protocols = "http")
     public List<Dinner> findAll() {
         List<Dinner> dinners = dinnerRepo.findAll();
-
-//        if (dinners.isEmpty()) {
-//            throw new ResourceNotFoundException("Not found Dinners");
-//        }
 
         return dinners;
     }
@@ -88,7 +77,7 @@ public class DinnerService {
         foodCountDTOs.forEach(foodCountDTO -> {
             Food food = foodRepo.findById(foodCountDTO.getFoodNum()).get();
             Integer fcNum = foodCountDTO.getFoodDinnerCountNum();
-            FoodDinnerCount foodCount = new FoodDinnerCount();
+            FoodDinnerCount foodCount;
             if(fcNum != -1){
                 foodCount = foodCountRepo.findById(foodCountDTO.getFoodDinnerCountNum())
                         .orElseThrow(() -> new ResourceNotFoundException("Not found FoodCount with id = " + num));

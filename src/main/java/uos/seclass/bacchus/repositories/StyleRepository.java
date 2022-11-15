@@ -5,9 +5,11 @@ import org.springframework.stereotype.Repository;
 import uos.seclass.bacchus.domains.Order;
 import uos.seclass.bacchus.domains.Style;
 
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface StyleRepository extends JpaRepository<Style, Integer>{
-    public Style findByStyleCode(String styleCode);
+    public Optional<Style> findByStyleCode(String styleCode);
 }

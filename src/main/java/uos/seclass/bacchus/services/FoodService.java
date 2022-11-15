@@ -1,6 +1,7 @@
 package uos.seclass.bacchus.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,22 +27,15 @@ public class FoodService {
         this.foodRepo = foodRepo;
     }
 
-    @GetMapping()
-    @ResponseStatus(value = HttpStatus.OK)
-    //@ApiOperation(value = "Food 리스트 조회", protocols = "http")
     public List<Food> findAll() {
-        List<Food> foods = foodRepo.findAll();
-
-//        if (foods.isEmpty()) {
-//            throw new ResourceNotFoundException("Not found Foods");
-//        }
+        List<Food> foods = foodRepo.findAll(Sort.by(Sort.Direction.DESC, "type"));
 
         return foods;
     }
 
     public Food findOne(Integer num) {
         Food food = foodRepo.findById(num)
-                .orElseThrow(() -> new ResourceNotFoundException("Not found Food with id = " + num));
+                .orElseThrow(() -> new ResourceNotFoundException("번호가 "+num+"인 음식이 존재하지 않습니다."));
         return food;
     }
 
@@ -55,7 +49,7 @@ public class FoodService {
 
     public Food update(Integer num, UpdateFoodDTO foodDTO) {
 
-        Food food = foodRepo.findById(num).orElseThrow(() -> new ResourceNotFoundException("Not found Member with id = " + num));
+        Food food = foodRepo.findById(num).orElseThrow(() -> new ResourceNotFoundException("번호가 "+num+"인 음식이 존재하지 않습니다."));
         FoodMapper.INSTANCE.updateFromDto(foodDTO, food);
         Food newFood = foodRepo.save(food);
 

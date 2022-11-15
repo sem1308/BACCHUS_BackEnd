@@ -17,7 +17,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @Builder
-public class Employee {
+public class Employee{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="employee_num")
@@ -38,5 +38,9 @@ public class Employee {
     @Column(name="employeed_at", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date employeedAt;
+
+    public int getNum(){
+        return getEmployeeNum();
+    }
 }
 

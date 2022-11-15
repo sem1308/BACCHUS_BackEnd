@@ -20,45 +20,29 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity(name = "Customers")
+@Entity(name = "Accounts")
 @AllArgsConstructor()
 @NoArgsConstructor()
 @Setter
 @Getter
 @Builder
-public class Customer{
+public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="customer_num")
-    private int customerNum;
+    @Column(name="account_num")
+    private int accountNum;
 
-    /* Foreign Key */
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_num", nullable = false, insertable = false, updatable = false)
-    private List<Order> orders;
-    /* */
-
-    @Column(nullable = false, unique = true, length = 16)
-    private String id;
-
-    @Column(nullable = false, unique = false, length = 128)
-    private String pw;
-
-    @Column(nullable = false, unique = false, length = 16)
-    private String name;
-
-    @Column(nullable = false, length = 100)
-    private String address;
+    @Column(name = "owner_name", nullable = false)
+    private String ownerName;
 
     @Column(name = "card_num", nullable = false, length = 16)
     private String cardNum;
 
+    @Column(name = "money", nullable = false)
+    private int money;
+
     @Column(name="created_at", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
-
-    public int getNum(){
-        return getCustomerNum();
-    }
 }
 

@@ -29,14 +29,11 @@ public class EmployeeService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @GetMapping()
-    @ResponseStatus(value = HttpStatus.OK)
-    //@ApiOperation(value = "Member 리스트 조회", protocols = "http")
     public List<Employee> findAll() {
         List<Employee> employees = employeeRepo.findAll();
 
         if (employees.isEmpty()) {
-            throw new ResourceNotFoundException("Not found Members");
+            throw new ResourceNotFoundException("직원이 없습니다.");
         }
 
         return employees;
@@ -44,26 +41,30 @@ public class EmployeeService {
 
     public Employee findOne(Integer num) {
         Employee employee = employeeRepo.findById(num)
-                .orElseThrow(() -> new ResourceNotFoundException("Not found Member with id = " + num));
+                .orElseThrow(() -> new ResourceNotFoundException("번호가 "+num+"인 직원이 존재하지 않습니다."));
 
         return employee;
     }
 
     public Employee login(Map<String, String> loginInfo) {
         Employee employee = employeeRepo.findById(loginInfo.get("id"))
-                .orElseThrow(() -> new ResourceNotFoundException("Not found Member with id = " + loginInfo.get("id")));
+                .orElseThrow(() -> new ResourceNotFoundException("아이디가 존재하지 않습니다."));
 
         // 암호 일치 확인
         if (!passwordEncoder.matches(loginInfo.get("pw"), employee.getPw())) {
-            throw new IllegalArgumentException("Wrong password");
+            throw new IllegalArgumentException("비밀번호가 틀렸습니다.");
         }
 
         return employee;
     }
 
+    public boolean checkDuplicate(String id){
+        return employeeRepo.findById(id).isPresent();
+    }
+
     public Employee insert(InsertEmployeeDTO employeeDTO) {
-        if (employeeRepo.findById(employeeDTO.getId()).isPresent()) {
-            throw new DuplicateKeyException("Duplicated ID");
+        if (checkDuplicate(employeeDTO.getId())) {
+            throw new DuplicateKeyException("ID가 중복되었습니다.");
         }
 
         Employee newEmployee = EmployeeMapper.INSTANCE.toEntity(employeeDTO);
@@ -78,7 +79,7 @@ public class EmployeeService {
 
     public Employee update(Integer num, UpdateEmployeeDTO employeeDTO) {
 
-        Employee employee = employeeRepo.findById(num).orElseThrow(() -> new ResourceNotFoundException("Not found Member with id = " + num));
+        Employee employee = employeeRepo.findById(num).orElseThrow(() -> new ResourceNotFoundException("번호가 "+num+"인 직원이 존재하지 않습니다."));
         EmployeeMapper.INSTANCE.updateFromDto(employeeDTO, employee);
         Employee newEmployee = employeeRepo.save(employee);
 

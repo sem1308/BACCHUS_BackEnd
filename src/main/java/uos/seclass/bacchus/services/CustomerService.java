@@ -2,10 +2,8 @@ package uos.seclass.bacchus.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.*;
 import uos.seclass.bacchus.domains.Customer;
 import uos.seclass.bacchus.dtos.InsertCustomerDTO;
 import uos.seclass.bacchus.dtos.UpdateCustomerDTO;
@@ -28,14 +26,11 @@ public class CustomerService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @GetMapping()
-    @ResponseStatus(value = HttpStatus.OK)
-    //@ApiOperation(value = "Member 리스트 조회", protocols = "http")
     public List<Customer> findAll() {
         List<Customer> customers = customerRepo.findAll();
 
         if (customers.isEmpty()) {
-            throw new ResourceNotFoundException("Not found Customers");
+            throw new ResourceNotFoundException("고객이 없습니다.");
         }
 
         return customers;
@@ -43,18 +38,18 @@ public class CustomerService {
 
     public Customer findOne(Integer num) {
         Customer customer = customerRepo.findById(num)
-                .orElseThrow(() -> new ResourceNotFoundException("Not found Member with id = " + num));
+                .orElseThrow(() -> new ResourceNotFoundException("번호가 "+num+"인 고객이 존재하지 않습니다."));
 
         return customer;
     }
 
     public Customer login(Map<String, String> loginInfo) {
         Customer customer = customerRepo.findById(loginInfo.get("id"))
-                .orElseThrow(() -> new ResourceNotFoundException("Not found Member with id = " + loginInfo.get("id")));
+                .orElseThrow(() -> new ResourceNotFoundException("아이디가 존재하지 않습니다."));
 
         // 암호 일치 확인
         if (!passwordEncoder.matches(loginInfo.get("pw"), customer.getPw())) {
-            throw new IllegalArgumentException("Wrong password");
+            throw new IllegalArgumentException("비밀번호가 틀렸습니다.");
         }
 
         return customer;
@@ -62,14 +57,13 @@ public class CustomerService {
 
     public Customer insert(InsertCustomerDTO customerDTO) {
         if (customerRepo.findById(customerDTO.getId()).isPresent()) {
-            throw new DuplicateKeyException("Duplicated ID");
+            throw new DuplicateKeyException("아이디가 존재합니다.");
         }
 
         Customer newCustomer = CustomerMapper.INSTANCE.toEntity(customerDTO);
 
         newCustomer.setPw(passwordEncoder.encode(newCustomer.getPw()));
         newCustomer.setCreatedAt(new Date());
-        newCustomer.setRole("customer");
 
         newCustomer = customerRepo.save(newCustomer);
 
@@ -78,10 +72,8 @@ public class CustomerService {
 
     public Customer update(Integer num, UpdateCustomerDTO customerDTO) {
 
-        Customer customer = customerRepo.findById(num).orElseThrow(() -> new ResourceNotFoundException("Not found Member with id = " + num));
-        System.out.println("name : " + customerDTO.getAddress());
+        Customer customer = customerRepo.findById(num).orElseThrow(() -> new ResourceNotFoundException("번호가 "+num+"인 고객이 존재하지 않습니다."));
         CustomerMapper.INSTANCE.updateFromDto(customerDTO, customer);
-        System.out.println("name : " + customer.getAddress());
         Customer newCustomer = customerRepo.save(customer);
 
         return newCustomer;

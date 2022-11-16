@@ -13,4 +13,6 @@ public class UpdateDinnerDTO {
     private String extraContent;
 
     private int numPeople;
+
+    private  String state;
 }

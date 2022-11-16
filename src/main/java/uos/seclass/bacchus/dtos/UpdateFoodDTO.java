@@ -15,4 +15,6 @@ public class UpdateFoodDTO {
     private int price;
 
     private String type;
+
+    private String state;
 }

@@ -52,7 +52,7 @@ public class DinnerService {
 
     public Dinner insert(InsertDinnerDTO dinnerDTO, Set<InsertFoodDinnerCountDTO> foodCountDTOs) {
         Dinner newDinner = DinnerMapper.INSTANCE.toEntity(dinnerDTO);
-
+        newDinner.setState("SA");
         dinnerRepo.save(newDinner).getDinnerNum();
 
         foodCountDTOs.forEach(foodCountDTO -> {

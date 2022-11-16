@@ -36,5 +36,8 @@ public class Food {
 
     @Column(name="type", nullable = false, length = 10)
     private String type;
+
+    @Column(name="state", nullable = false, length = 10)
+    private String state;
 }
 

@@ -19,11 +19,11 @@ public class FoodDinnerCount {
 
     /* Foreign Key */
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = { CascadeType.ALL },fetch = FetchType.LAZY)
     @JoinColumn(name = "dinner_num", nullable = false)
     private Dinner dinner;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = { CascadeType.ALL },fetch = FetchType.LAZY)
     @JoinColumn(name = "food_num", nullable = false)
     private Food food;
     /*  */

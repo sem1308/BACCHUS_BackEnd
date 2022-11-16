@@ -37,5 +37,8 @@ public class Dinner {
 
     @Column(name="num_people", nullable = false)
     private int numPeople;
+
+    @Column(name="state", nullable = false)
+    private String state;
 }
 

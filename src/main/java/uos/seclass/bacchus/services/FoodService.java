@@ -41,7 +41,7 @@ public class FoodService {
 
     public Food insert(InsertFoodDTO foodDTO) {
         Food newFood = FoodMapper.INSTANCE.toEntity(foodDTO);
-
+        newFood.setState("SA"); // SALE AVAILABLE
         newFood = foodRepo.save(newFood);
 
         return newFood;

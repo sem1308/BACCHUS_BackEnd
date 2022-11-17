@@ -25,8 +25,8 @@ public class Order {
     private int orderNum;
 
     /* Foreign Key */
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name = "customer_num", nullable = false)
     private Customer customer;
 

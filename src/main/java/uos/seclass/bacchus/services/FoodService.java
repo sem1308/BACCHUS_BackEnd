@@ -28,7 +28,7 @@ public class FoodService {
     }
 
     public List<Food> findAll() {
-        List<Food> foods = foodRepo.findAll(Sort.by(Sort.Direction.DESC, "type"));
+        List<Food> foods = foodRepo.findAll(Sort.by("state").ascending().and(Sort.by("type").descending()));
 
         return foods;
     }

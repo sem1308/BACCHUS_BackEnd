@@ -1,6 +1,7 @@
 package uos.seclass.bacchus.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,7 +41,7 @@ public class OrderService {
     }
 
     public List<Order> findAll() {
-        List<Order> orders = orderRepo.findAll();
+        List<Order> orders = orderRepo.findAll(Sort.by("orderNum").descending());
         return orders;
     }
 

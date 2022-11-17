@@ -1,6 +1,7 @@
 package uos.seclass.bacchus.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import uos.seclass.bacchus.domains.Dinner;
 import uos.seclass.bacchus.domains.Food;
@@ -31,7 +32,7 @@ public class DinnerService {
     }
 
     public List<Dinner> findAll() {
-        List<Dinner> dinners = dinnerRepo.findAll();
+        List<Dinner> dinners = dinnerRepo.findAll(Sort.by("state").ascending());
 
         return dinners;
     }

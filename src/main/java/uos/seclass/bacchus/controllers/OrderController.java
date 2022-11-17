@@ -13,6 +13,7 @@ import uos.seclass.bacchus.misc.StatusEnum;
 import uos.seclass.bacchus.services.AccountService;
 import uos.seclass.bacchus.services.OrderService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController()
@@ -31,9 +32,15 @@ public class OrderController {
     @GetMapping()
     @ResponseStatus(value = HttpStatus.OK)
     @ApiOperation(value = "전체 주문 목록 조회", protocols = "http")
-    public List<Order> lookUpOrderList() {
+    public List<PrintOrderDTO> lookUpOrderList() {
         List<Order> orders = orderService.findAll();
-        return orders;
+        List<PrintOrderDTO> printOrders = new ArrayList<>();
+        orders.forEach(order ->
+                printOrders.add(PrintOrderDTO.builder().orderNum(order.getOrderNum())
+                        .customerName(order.getCustomer().getName()).orderTime(order.getOrderTime()).dinners(order.getDinners())
+                        .address(order.getAddress()).deliveredTime(order.getDeliveredTime()).wantedDeliveredTime(order.getWantedDeliveredTime())
+                        .foodCounts(order.getFoodCounts()).state(order.getState()).totalPrice(order.getTotalPrice()).build()));
+        return printOrders;
     }
 
     @GetMapping("/{num}")

@@ -11,6 +11,10 @@ import uos.seclass.bacchus.domains.Order;
 public class InsertFoodOrderCountDTO {
     private int foodNum;
 
+    private int name;
+
     private int count;
+
+    private int price;
 }
 

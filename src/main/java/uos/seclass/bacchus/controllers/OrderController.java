@@ -39,7 +39,7 @@ public class OrderController {
                 printOrders.add(PrintOrderDTO.builder().orderNum(order.getOrderNum())
                         .customerName(order.getCustomer().getName()).orderTime(order.getOrderTime()).dinners(order.getDinners())
                         .address(order.getAddress()).deliveredTime(order.getDeliveredTime()).wantedDeliveredTime(order.getWantedDeliveredTime())
-                        .foodCounts(order.getFoodCounts()).state(order.getState()).totalPrice(order.getTotalPrice()).build()));
+                        .foodCounts(order.getFoodCounts()).state(order.getState()).totalPrice(order.getTotalPrice()).style(order.getStyle()).build()));
         return printOrders;
     }
 

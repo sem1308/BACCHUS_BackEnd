@@ -38,9 +38,5 @@ public class Employee{
     @Column(name="employeed_at", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date employeedAt;
-
-    public int getNum(){
-        return getEmployeeNum();
-    }
 }
 

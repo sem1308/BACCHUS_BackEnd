@@ -22,13 +22,15 @@ public class FoodOrderCount {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_num", nullable = false)
     private Order order;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "food_num", nullable = false)
-    private Food food;
     /*  */
+
+    @Column(name="name", nullable = false)
+    private int name;
 
     @Column(name="count", nullable = false)
     private int count;
+
+    @Column(name="price", nullable = false)
+    private int price;
 }
 

@@ -23,7 +23,13 @@ public class Style {
     @Column(name="style_code", length = 10)
     private String styleCode;
 
+    @Column(nullable = false)
+    private String name;
+
     @Column(nullable = false, length = 64)
     private String content;
+
+    @Column(nullable = false)
+    private int price;
 }
 

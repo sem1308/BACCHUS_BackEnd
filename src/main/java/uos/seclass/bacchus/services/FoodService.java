@@ -2,17 +2,11 @@ package uos.seclass.bacchus.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import uos.seclass.bacchus.domains.Customer;
 import uos.seclass.bacchus.domains.Food;
 import uos.seclass.bacchus.dtos.InsertFoodDTO;
-import uos.seclass.bacchus.dtos.UpdateCustomerDTO;
 import uos.seclass.bacchus.dtos.UpdateFoodDTO;
 import uos.seclass.bacchus.exceptions.ResourceNotFoundException;
-import uos.seclass.bacchus.mappers.CustomerMapper;
 import uos.seclass.bacchus.mappers.FoodMapper;
 import uos.seclass.bacchus.repositories.FoodRepository;
 

@@ -7,8 +7,8 @@ import lombok.*;
 @Setter
 @Getter
 @Builder
-public class UpdateFoodDinnerCountDTO {
-    private int foodDinnerCountNum;
+public class UpdateDinnerFoodCountDTO {
+    private int dinnerFoodCountNum;
 
     private int foodNum;
 

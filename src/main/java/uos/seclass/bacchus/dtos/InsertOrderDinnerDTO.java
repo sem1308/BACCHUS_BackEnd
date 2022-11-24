@@ -9,15 +9,11 @@ import java.util.Set;
 @Setter
 @Getter
 @Builder
-public class PrintDinnerDTO {
+public class InsertOrderDinnerDTO {
     private int dinnerNum;
 
-    private String name;
+    private String styleCode;
 
-    private String extraContent;
-
-    private Set<PrintDinnerFoodCountDTO> foodCounts;
-
-    private int numPeople;
+    private Set<InsertOrderFoodCountDTO> insertOrderFoodCountDTOs;
 }
 

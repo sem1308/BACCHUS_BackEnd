@@ -11,4 +11,6 @@ public class UpdateEmployeeDTO {
     private String id;
 
     private String pw;
+
+    private boolean isApproved;
 }

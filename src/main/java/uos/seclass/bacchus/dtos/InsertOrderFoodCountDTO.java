@@ -7,9 +7,13 @@ import lombok.*;
 @Setter
 @Getter
 @Builder
-public class InsertFoodDinnerCountDTO {
+public class InsertOrderFoodCountDTO {
     private int foodNum;
 
+    private String foodName;
+
     private int count;
+
+    private int price;
 }
 

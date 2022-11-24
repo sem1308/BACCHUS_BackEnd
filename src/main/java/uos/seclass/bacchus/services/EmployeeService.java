@@ -55,6 +55,10 @@ public class EmployeeService {
             throw new IllegalArgumentException("비밀번호가 틀렸습니다.");
         }
 
+        if(!employee.isApproved()){
+            throw new ResourceNotFoundException("가입이 완료되지 않았습니다.");
+        }
+
         return employee;
     }
 
@@ -71,6 +75,7 @@ public class EmployeeService {
 
         newEmployee.setPw(passwordEncoder.encode(newEmployee.getPw()));
         newEmployee.setEmployeedAt(new Date());
+        newEmployee.setApproved(false);
 
         newEmployee = employeeRepo.save(newEmployee);
 

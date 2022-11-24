@@ -30,17 +30,9 @@ public class Order {
     @JoinColumn(name = "customer_num", nullable = false)
     private Customer customer;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dinner_num", nullable = false)
-    private Set<Dinner> dinners;
-
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_num", nullable = false, updatable = false, insertable = false)
-    private Set<FoodOrderCount> foodCounts;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "style_code", nullable = false)
-    private Style style;
+    private Set<OrderDinner> orderDinners;
     /* */
 
     @Column(name="state", nullable = false)

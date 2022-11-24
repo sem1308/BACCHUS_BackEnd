@@ -1,8 +1,8 @@
 package uos.seclass.bacchus.dtos;
 
 import lombok.*;
+
 import java.util.Date;
-import java.util.Set;
 
 @AllArgsConstructor()
 @NoArgsConstructor()
@@ -11,10 +11,6 @@ import java.util.Set;
 @Builder
 public class InsertOrderDTO {
     private int customerNum;
-
-    private Set<Integer> dinnerNum;
-
-    private String styleCode;
 
     private int totalPrice;
 

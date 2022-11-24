@@ -34,8 +34,8 @@ public class StyleController {
     @GetMapping("/{num}")
     @ResponseStatus(value = HttpStatus.OK)
     @ApiOperation(value = "스타일 상세 조회", protocols = "http")
-    public ResponseEntity<Style> lookUpStyle(@PathVariable("num") Integer num) {
-        Style style = styleService.findOne(num);
+    public ResponseEntity<Style> lookUpStyle(@PathVariable("code") String code) {
+        Style style = styleService.findOne(code);
         return new ResponseEntity<>(style, HttpStatus.OK);
     }
 

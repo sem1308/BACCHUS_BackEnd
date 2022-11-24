@@ -38,5 +38,8 @@ public class Employee{
     @Column(name="employeed_at", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date employeedAt;
+
+    @Column(name="is_approved", nullable = false)
+    private boolean isApproved;
 }
 

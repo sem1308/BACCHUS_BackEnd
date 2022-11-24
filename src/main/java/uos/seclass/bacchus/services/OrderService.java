@@ -2,20 +2,16 @@ package uos.seclass.bacchus.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import uos.seclass.bacchus.domains.Dinner;
-import uos.seclass.bacchus.domains.Food;
-import uos.seclass.bacchus.domains.FoodOrderCount;
-import uos.seclass.bacchus.domains.Order;
-import uos.seclass.bacchus.dtos.InsertFoodOrderCountDTO;
+import uos.seclass.bacchus.domains.*;
+import uos.seclass.bacchus.dtos.InsertOrderDinnerDTO;
 import uos.seclass.bacchus.dtos.InsertOrderDTO;
+import uos.seclass.bacchus.dtos.PrintDinnerFoodCountDTO;
 import uos.seclass.bacchus.dtos.UpdateOrderDTO;
 import uos.seclass.bacchus.exceptions.ResourceNotFoundException;
-import uos.seclass.bacchus.mappers.FoodOrderCountMapper;
+import uos.seclass.bacchus.mappers.OrderDinnerMapper;
 import uos.seclass.bacchus.mappers.OrderMapper;
+import uos.seclass.bacchus.mappers.OrderFoodCountMapper;
 import uos.seclass.bacchus.repositories.*;
 
 import java.util.*;
@@ -24,13 +20,14 @@ import java.util.*;
 public class OrderService {
     private final OrderRepository orderRepo;
     private final FoodRepository foodRepo;
-    private final FoodOrderCountRepository foodCountRepo;
+    private final OrderFoodCountRepository foodCountRepo;
+    private final OrderDinnerRepository orderDinnerRepo;
     private final DinnerRepository dinnerRepo;
     private final CustomerRepository customerRepo;
     private final StyleRepository styleRepo;
 
     @Autowired
-    public OrderService(OrderRepository orderRepo, FoodOrderCountRepository foodCountRepo, AccountRepository accountRepo,
+    public OrderService(OrderRepository orderRepo, OrderFoodCountRepository foodCountRepo, AccountRepository accountRepo, OrderDinnerRepository orderDinnerRepo,
                         FoodRepository foodRepo, DinnerRepository dinnerRepo, CustomerRepository customerRepo, StyleRepository styleRepo) {
         this.orderRepo = orderRepo;
         this.foodRepo = foodRepo;
@@ -38,6 +35,7 @@ public class OrderService {
         this.dinnerRepo = dinnerRepo;
         this.customerRepo = customerRepo;
         this.styleRepo = styleRepo;
+        this.orderDinnerRepo = orderDinnerRepo;
     }
 
     public List<Order> findAll() {
@@ -47,6 +45,7 @@ public class OrderService {
 
     public Order findOne(Integer orderNum) {
         Order order = orderRepo.findById(orderNum).get();
+
         return order;
     }
 
@@ -55,22 +54,17 @@ public class OrderService {
         return order;
     }
 
-    public Order insert(InsertOrderDTO orderDTO, Set<InsertFoodOrderCountDTO> foodCountDTOs) {
+    public Order insert(InsertOrderDTO orderDTO, Set<InsertOrderDinnerDTO> orderDinnerDTOs) {
         Order newOrder = OrderMapper.INSTANCE.toEntity(orderDTO);
-
-        HashSet<Dinner> dinners = new HashSet<>();
-        orderDTO.getDinnerNum().forEach(dinnerNUm -> dinners.add(dinnerRepo.findById(dinnerNUm).get()));
 
         newOrder.setCustomer(customerRepo.findById(orderDTO.getCustomerNum()).orElseThrow(() ->
                 new ResourceNotFoundException("고객을 찾을 수 없습니다.")));
-        newOrder.setStyle(styleRepo.findByStyleCode(orderDTO.getStyleCode()).orElseThrow(() ->
-                new ResourceNotFoundException("스타일("+orderDTO.getStyleCode()+")을 찾을 수 없습니다.")));
-        newOrder.setDinners(dinners);
         newOrder.setOrderTime(new Date());
         newOrder.setDeliveredTime(null);
         newOrder.setState("OS");
         /*
             - STATE -
+            OC : Order Canceld
             OS : Order Start
             CS : Cooking Start
             CE : Cooking End
@@ -79,13 +73,24 @@ public class OrderService {
         */
         orderRepo.save(newOrder);
 
-        foodCountDTOs.forEach(foodCountDTO -> {
-            Food food = foodRepo.findById(foodCountDTO.getFoodNum()).get();
-            FoodOrderCount newFoodCount = FoodOrderCountMapper.INSTANCE.toEntity(foodCountDTO);
-            newFoodCount.setFood(food);
-            newFoodCount.setOrder(newOrder);
-            foodCountRepo.save(newFoodCount);
+        orderDinnerDTOs.forEach(orderDinnerDTO -> {
+            OrderDinner newOrderDinner = OrderDinnerMapper.INSTANCE.toEntity(orderDinnerDTO);
+            newOrderDinner.setOrder(newOrder);
+            newOrderDinner.setStyle(styleRepo.findByStyleCode(orderDinnerDTO.getStyleCode()).orElseThrow(() ->
+                    new ResourceNotFoundException("스타일("+orderDinnerDTO.getStyleCode()+")을 찾을 수 없습니다.")));
+            newOrderDinner.setDinner(dinnerRepo.findById(orderDinnerDTO.getDinnerNum()).orElseThrow(() ->
+                    new ResourceNotFoundException("디너를 찾을 수 없습니다.")));
+
+            orderDinnerRepo.save(newOrderDinner);
+            orderDinnerDTO.getInsertOrderFoodCountDTOs().forEach((orderFoodCountDTO)->{
+                OrderFoodCount orderFoodCount = OrderFoodCountMapper.INSTANCE.toEntity(orderFoodCountDTO);
+                orderFoodCount.setOrderDinner(newOrderDinner);
+                orderFoodCount.setFood(foodRepo.findById(orderFoodCountDTO.getFoodNum()).orElseThrow(() ->
+                        new ResourceNotFoundException("디너를 찾을 수 없습니다.")));
+                foodCountRepo.save(orderFoodCount);
+            });
         });
+
 
         return newOrder;
     }

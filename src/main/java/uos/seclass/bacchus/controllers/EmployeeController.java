@@ -9,6 +9,7 @@ import uos.seclass.bacchus.domains.Customer;
 import uos.seclass.bacchus.domains.Employee;
 import uos.seclass.bacchus.dtos.InsertEmployeeDTO;
 import uos.seclass.bacchus.dtos.UpdateEmployeeDTO;
+import uos.seclass.bacchus.exceptions.ResourceNotFoundException;
 import uos.seclass.bacchus.misc.JwtTokenProvider;
 import uos.seclass.bacchus.misc.ReturnMessage;
 import uos.seclass.bacchus.misc.StatusEnum;
@@ -71,7 +72,10 @@ public class EmployeeController {
         msg.setStatus(StatusEnum.OK);
 
         List<String> roles = new ArrayList<>();
-        roles.add("EMPL");
+        roles.add("EMPLE");
+        if(employee.getOccupation().equals("RM")){
+            roles.add("ADMIN");
+        }
         String token = jwtTokenProvider.createToken(employee.getEmployeeNum(),employee.getId(), roles);
         msg.setData(token);
 

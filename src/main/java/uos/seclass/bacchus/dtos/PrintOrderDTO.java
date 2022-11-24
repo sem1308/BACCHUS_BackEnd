@@ -1,13 +1,9 @@
 package uos.seclass.bacchus.dtos;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import uos.seclass.bacchus.domains.Customer;
-import uos.seclass.bacchus.domains.Dinner;
-import uos.seclass.bacchus.domains.FoodOrderCount;
+import uos.seclass.bacchus.domains.OrderDinner;
 import uos.seclass.bacchus.domains.Style;
 
-import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
 
@@ -21,11 +17,9 @@ public class PrintOrderDTO {
 
     private String customerName;
 
-    private Set<Dinner> dinners;
+    private int customerNum;
 
-    private Set<FoodOrderCount> foodCounts;
-
-    private Style style;
+    private Set<PrintOrderDinnerDTO> orderDinners;
 
     private String state;
 

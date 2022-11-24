@@ -5,17 +5,17 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Entity(name = "FoodDinnerCounts")
+@Entity(name = "DinnerFoodCounts")
 @AllArgsConstructor()
 @NoArgsConstructor()
 @Setter
 @Getter
 @Builder
-public class FoodDinnerCount {
+public class DinnerFoodCount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="food_dinner_count_num")
-    private int foodDinnerCountNum;
+    @Column(name="dinner_food_count_num")
+    private int dinnerFoodCountNum;
 
     /* Foreign Key */
     @JsonIgnore

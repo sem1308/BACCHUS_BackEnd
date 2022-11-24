@@ -5,15 +5,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import uos.seclass.bacchus.domains.Customer;
+import uos.seclass.bacchus.domains.Dinner;
 import uos.seclass.bacchus.domains.Order;
 import uos.seclass.bacchus.dtos.*;
-import uos.seclass.bacchus.exceptions.ResourceNotFoundException;
+import uos.seclass.bacchus.mappers.CustomerMapper;
 import uos.seclass.bacchus.misc.ReturnMessage;
 import uos.seclass.bacchus.misc.StatusEnum;
 import uos.seclass.bacchus.services.AccountService;
+import uos.seclass.bacchus.services.CustomerService;
 import uos.seclass.bacchus.services.OrderService;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @RestController()
@@ -21,12 +25,14 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
+    private final CustomerService customerService;
     private final AccountService accountService;
 
     @Autowired
-    public OrderController(OrderService orderService, AccountService accountService) {
+    public OrderController(OrderService orderService, AccountService accountService, CustomerService customerService) {
         this.orderService = orderService;
         this.accountService = accountService;
+        this.customerService = customerService;
     }
 
     @GetMapping()
@@ -35,11 +41,20 @@ public class OrderController {
     public List<PrintOrderDTO> lookUpOrderList() {
         List<Order> orders = orderService.findAll();
         List<PrintOrderDTO> printOrders = new ArrayList<>();
-        orders.forEach(order ->
-                printOrders.add(PrintOrderDTO.builder().orderNum(order.getOrderNum())
-                        .customerName(order.getCustomer().getName()).orderTime(order.getOrderTime()).dinners(order.getDinners())
-                        .address(order.getAddress()).deliveredTime(order.getDeliveredTime()).wantedDeliveredTime(order.getWantedDeliveredTime())
-                        .foodCounts(order.getFoodCounts()).state(order.getState()).totalPrice(order.getTotalPrice()).style(order.getStyle()).build()));
+        orders.forEach(order ->{
+            HashSet<PrintOrderDinnerDTO> printOrderDinners = new HashSet<>();
+            order.getOrderDinners().forEach((orderDinner -> {
+                PrintDinnerDTO printDinnerDTO = PrintDinnerDTO.builder().dinnerNum(orderDinner.getDinner().getDinnerNum())
+                        .name(orderDinner.getDinner().getName()).build();
+                printOrderDinners.add(PrintOrderDinnerDTO.builder().dinner(printDinnerDTO)
+                        .foodCounts(orderDinner.getFoodCounts()).style(orderDinner.getStyle()).build());
+            }));
+
+            printOrders.add(PrintOrderDTO.builder().orderNum(order.getOrderNum()).customerNum(order.getCustomer().getCustomerNum())
+                    .customerName(order.getCustomer().getName()).orderTime(order.getOrderTime()).orderDinners(printOrderDinners)
+                    .address(order.getAddress()).deliveredTime(order.getDeliveredTime()).wantedDeliveredTime(order.getWantedDeliveredTime())
+                    .state(order.getState()).totalPrice(order.getTotalPrice()).build());
+        });
         return printOrders;
     }
 
@@ -58,7 +73,7 @@ public class OrderController {
         InsertOrderDTO orderDTO = orderForm.getInsertOrderDTO();
 
         accountService.pay(orderDTO.getCardNum(), orderDTO.getCustomerNum(),orderDTO.getTotalPrice());
-        Order order = orderService.insert(orderDTO, orderForm.getFoodCountDTOs());
+        Order order = orderService.insert(orderDTO, orderForm.getOrderDinnerDTOs());
 
         ReturnMessage<Order> msg = new ReturnMessage<>();
         msg.setMessage("주문이 완료되었습니다.");
@@ -73,6 +88,12 @@ public class OrderController {
     @ApiOperation(value = "주문 상태 변경", protocols = "http")
     public ResponseEntity update(@PathVariable("num") Integer num, @RequestBody UpdateOrderDTO orderDTO) {
         Order order = orderService.update(num,orderDTO);
+
+        // 주문 취소면 환불
+        if(orderDTO.getState().equals("OC")){
+            Customer customer = customerService.findOne(orderDTO.getCustomerNum());
+            accountService.pay(customer.getCardNum(), customer.getCustomerNum(),-orderDTO.getTotalPrice());
+        }
 
         ReturnMessage<Order> msg = new ReturnMessage<>();
         msg.setMessage("update suceess");

@@ -13,4 +13,8 @@ public class UpdateOrderDTO {
     private String state;
 
     private Date deliveredTime;
+
+    private int customerNum;
+
+    private int totalPrice;
 }

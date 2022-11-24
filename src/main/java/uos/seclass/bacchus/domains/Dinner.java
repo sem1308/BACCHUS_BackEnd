@@ -4,7 +4,6 @@ import java.util.Set;
 
 import javax.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,7 +25,7 @@ public class Dinner {
     /* Foreign Key */
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "dinner_num", nullable = false, updatable = false, insertable = false)
-    private Set<FoodDinnerCount> foodCounts;
+    private Set<DinnerFoodCount> foodCounts;
     /*  */
 
     @Column(name="name", nullable = false, length = 16)

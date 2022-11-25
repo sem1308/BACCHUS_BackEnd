@@ -48,6 +48,11 @@ public class CustomerController {
     public ResponseEntity<PrintCustomerDTO> lookUpMember(@PathVariable("num") Integer num) {
         Customer customer = customerService.findOne(num);
 
+        PrintCustomerDTO cust = getPrintCustomerDTO(customer);
+        return new ResponseEntity<>(cust, HttpStatus.OK);
+    }
+
+    private PrintCustomerDTO getPrintCustomerDTO(Customer customer){
         List<PrintOrderDTO> printOrders = new ArrayList<>();
         customer.getOrders().forEach(order ->{
             HashSet<PrintOrderDinnerDTO> printOrderDinners = new HashSet<>();
@@ -64,9 +69,8 @@ public class CustomerController {
                     .state(order.getState()).totalPrice(order.getTotalPrice()).build());
         });
 
-        PrintCustomerDTO cust = PrintCustomerDTO.builder().customerNum(customer.getCustomerNum()).cardNum(customer.getCardNum()).address(customer.getAddress())
+       return PrintCustomerDTO.builder().customerNum(customer.getCustomerNum()).cardNum(customer.getCardNum()).address(customer.getAddress())
                 .name(customer.getName()).orders(printOrders).build();
-        return new ResponseEntity<>(cust, HttpStatus.OK);
     }
 
     @PostMapping()

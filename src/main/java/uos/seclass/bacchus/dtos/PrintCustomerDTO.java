@@ -1,9 +1,6 @@
 package uos.seclass.bacchus.dtos;
 
 import lombok.*;
-import uos.seclass.bacchus.domains.Order;
-
-import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 

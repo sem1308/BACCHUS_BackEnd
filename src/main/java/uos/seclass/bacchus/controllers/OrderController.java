@@ -6,10 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uos.seclass.bacchus.domains.Customer;
-import uos.seclass.bacchus.domains.Dinner;
 import uos.seclass.bacchus.domains.Order;
 import uos.seclass.bacchus.dtos.*;
-import uos.seclass.bacchus.mappers.CustomerMapper;
 import uos.seclass.bacchus.misc.ReturnMessage;
 import uos.seclass.bacchus.misc.StatusEnum;
 import uos.seclass.bacchus.services.AccountService;
@@ -61,8 +59,8 @@ public class OrderController {
     @GetMapping("/{num}")
     @ResponseStatus(value = HttpStatus.OK)
     @ApiOperation(value = "고객별 주문 조회", protocols = "http")
-    public ResponseEntity<Order> lookUpOrderByMember(@PathVariable("num") Integer num) {
-        Order order = orderService.findOne(num);
+    public ResponseEntity<List<Order>> lookUpOrdersByMember(@PathVariable("num") Integer num) {
+        List<Order> order = orderService.findAllByCustomer(num);
         return new ResponseEntity<>(order, HttpStatus.OK);
     }
 
@@ -87,13 +85,12 @@ public class OrderController {
     @ResponseStatus(value = HttpStatus.OK)
     @ApiOperation(value = "주문 상태 변경", protocols = "http")
     public ResponseEntity update(@PathVariable("num") Integer num, @RequestBody UpdateOrderDTO orderDTO) {
-        Order order = orderService.update(num,orderDTO);
-
         // 주문 취소면 환불
         if(orderDTO.getState().equals("OC")){
-            Customer customer = customerService.findOne(orderDTO.getCustomerNum());
-            accountService.pay(customer.getCardNum(), customer.getCustomerNum(),-orderDTO.getTotalPrice());
+            accountService.refund(orderDTO.getCustomerName(), orderDTO.getCardNum(),orderDTO.getTotalPrice());
         }
+
+        Order order = orderService.update(num,orderDTO);
 
         ReturnMessage<Order> msg = new ReturnMessage<>();
         msg.setMessage("update suceess");

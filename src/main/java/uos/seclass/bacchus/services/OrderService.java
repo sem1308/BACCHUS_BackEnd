@@ -101,8 +101,6 @@ public class OrderService {
 
         OrderMapper.INSTANCE.updateFromDto(orderDTO, order);
 
-        order.setDeliveredTime(orderDTO.getDeliveredTime());
-        order.setState(orderDTO.getState());
         Order modifiedOrder = orderRepo.save(order);
 
         return modifiedOrder;

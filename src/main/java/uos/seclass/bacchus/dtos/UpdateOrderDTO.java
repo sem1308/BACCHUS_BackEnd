@@ -14,7 +14,9 @@ public class UpdateOrderDTO {
 
     private Date deliveredTime;
 
-    private int customerNum;
+    private String customerName;
+
+    private String cardNum;
 
     private int totalPrice;
 }

@@ -1,8 +1,6 @@
 package uos.seclass.bacchus.dtos;
 
 import lombok.*;
-import uos.seclass.bacchus.domains.OrderDinner;
-import uos.seclass.bacchus.domains.Style;
 
 import java.util.Date;
 import java.util.Set;

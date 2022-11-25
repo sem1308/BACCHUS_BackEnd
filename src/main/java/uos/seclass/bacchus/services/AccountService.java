@@ -37,6 +37,17 @@ public class AccountService {
         }
     }
 
+    public void refund(String cusName, String cardNum, int price){
+
+        Account account = accountRepo.findByCardNumAndOwnerName(cardNum,cusName)
+                .orElseThrow(() -> new ResourceNotFoundException("카드 정보가 없습니다."));
+
+        UpdateAccountDTO dto = new UpdateAccountDTO();
+        dto.setMoney(account.getMoney() + price);
+        AccountMapper.INSTANCE.updateFromDto(dto, account);
+        accountRepo.save(account);
+    }
+
     public void checkDuplicate(String cardNum){
         if (accountRepo.findByCardNum(cardNum).isEmpty()){
             throw new ResourceNotFoundException("카드 정보가 없습니다.");

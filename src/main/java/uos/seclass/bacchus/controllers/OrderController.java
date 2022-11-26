@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import uos.seclass.bacchus.domains.Customer;
 import uos.seclass.bacchus.domains.Order;
 import uos.seclass.bacchus.dtos.*;
 import uos.seclass.bacchus.misc.ReturnMessage;
@@ -37,23 +36,8 @@ public class OrderController {
     @ResponseStatus(value = HttpStatus.OK)
     @ApiOperation(value = "전체 주문 목록 조회", protocols = "http")
     public List<PrintOrderDTO> lookUpOrderList() {
-        List<Order> orders = orderService.findAll();
-        List<PrintOrderDTO> printOrders = new ArrayList<>();
-        orders.forEach(order ->{
-            HashSet<PrintOrderDinnerDTO> printOrderDinners = new HashSet<>();
-            order.getOrderDinners().forEach((orderDinner -> {
-                PrintDinnerDTO printDinnerDTO = PrintDinnerDTO.builder().dinnerNum(orderDinner.getDinner().getDinnerNum())
-                        .name(orderDinner.getDinner().getName()).build();
-                printOrderDinners.add(PrintOrderDinnerDTO.builder().dinner(printDinnerDTO)
-                        .foodCounts(orderDinner.getFoodCounts()).style(orderDinner.getStyle()).build());
-            }));
-
-            printOrders.add(PrintOrderDTO.builder().orderNum(order.getOrderNum()).customerNum(order.getCustomer().getCustomerNum())
-                    .customerName(order.getCustomer().getName()).orderTime(order.getOrderTime()).orderDinners(printOrderDinners)
-                    .address(order.getAddress()).deliveredTime(order.getDeliveredTime()).wantedDeliveredTime(order.getWantedDeliveredTime())
-                    .state(order.getState()).totalPrice(order.getTotalPrice()).build());
-        });
-        return printOrders;
+        List<PrintOrderDTO> orders = orderService.findAll();
+        return orders;
     }
 
     @GetMapping("/{num}")
@@ -70,8 +54,8 @@ public class OrderController {
     public ResponseEntity register(@RequestBody InsertOrderForm orderForm) {
         InsertOrderDTO orderDTO = orderForm.getInsertOrderDTO();
 
-        accountService.pay(orderDTO.getCardNum(), orderDTO.getCustomerNum(),orderDTO.getTotalPrice());
-        Order order = orderService.insert(orderDTO, orderForm.getOrderDinnerDTOs());
+        accountService.pay(orderDTO.getCustomerName(), orderDTO.getCardNum(),orderDTO.getTotalPrice());
+        Order order = orderService.insert(orderForm);
 
         ReturnMessage<Order> msg = new ReturnMessage<>();
         msg.setMessage("주문이 완료되었습니다.");

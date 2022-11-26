@@ -30,5 +30,7 @@ public class PrintOrderDTO {
     private int totalPrice;
 
     private String address;
+
+    private String cardNum;
 }
 

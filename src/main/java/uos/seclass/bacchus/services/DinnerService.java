@@ -3,6 +3,7 @@ package uos.seclass.bacchus.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import uos.seclass.bacchus.domains.Customer;
 import uos.seclass.bacchus.domains.Dinner;
 import uos.seclass.bacchus.domains.DinnerFoodCount;
 import uos.seclass.bacchus.domains.Food;
@@ -14,6 +15,7 @@ import uos.seclass.bacchus.repositories.DinnerRepository;
 import uos.seclass.bacchus.repositories.DinnerFoodCountRepository;
 import uos.seclass.bacchus.repositories.FoodRepository;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -37,10 +39,7 @@ public class DinnerService {
         return dinners;
     }
 
-    public PrintDinnerDTO findOne(Integer num) {
-        Dinner dinner = dinnerRepo.findById(num)
-                .orElseThrow(() -> new ResourceNotFoundException("Not found Dinner with id = " + num));
-
+    private PrintDinnerDTO getPrintDinnerDTO(Dinner dinner){
         PrintDinnerDTO printDinner = PrintDinnerDTO.builder().dinnerNum(dinner.getDinnerNum())
                 .name(dinner.getName()).extraContent(dinner.getExtraContent()).numPeople(dinner.getNumPeople()).build();
         HashSet<PrintDinnerFoodCountDTO> foodCounts = new HashSet<>();
@@ -49,6 +48,13 @@ public class DinnerService {
                 .dinnerNum(foodCount.getDinner().getDinnerNum()).food(foodCount.getFood()).build()));
         printDinner.setFoodCounts(foodCounts);
         return printDinner;
+    }
+
+    public PrintDinnerDTO findOne(Integer num) {
+        Dinner dinner = dinnerRepo.findById(num)
+                .orElseThrow(() -> new ResourceNotFoundException("Not found Dinner with id = " + num));
+
+        return getPrintDinnerDTO(dinner);
     }
 
     public Dinner insert(InsertDinnerDTO dinnerDTO, Set<InsertDinnerFoodCountDTO> foodCountDTOs) {

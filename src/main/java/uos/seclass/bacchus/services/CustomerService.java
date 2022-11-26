@@ -5,15 +5,12 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import uos.seclass.bacchus.domains.Customer;
-import uos.seclass.bacchus.dtos.InsertCustomerDTO;
-import uos.seclass.bacchus.dtos.UpdateCustomerDTO;
+import uos.seclass.bacchus.dtos.*;
 import uos.seclass.bacchus.exceptions.ResourceNotFoundException;
 import uos.seclass.bacchus.mappers.CustomerMapper;
 import uos.seclass.bacchus.repositories.CustomerRepository;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class CustomerService {
@@ -36,11 +33,32 @@ public class CustomerService {
         return customers;
     }
 
-    public Customer findOne(Integer num) {
+    private PrintCustomerDTO getPrintCustomerDTO(Customer customer){
+        List<PrintOrderDTO> printOrders = new ArrayList<>();
+        customer.getOrders().forEach(order ->{
+            HashSet<PrintOrderDinnerDTO> printOrderDinners = new HashSet<>();
+            order.getOrderDinners().forEach((orderDinner -> {
+                PrintDinnerDTO printDinnerDTO = PrintDinnerDTO.builder().dinnerNum(orderDinner.getDinner().getDinnerNum())
+                        .name(orderDinner.getDinner().getName()).extraContent(orderDinner.getDinner().getExtraContent()).build();
+                printOrderDinners.add(PrintOrderDinnerDTO.builder().dinner(printDinnerDTO)
+                        .foodCounts(orderDinner.getFoodCounts()).style(orderDinner.getStyle()).build());
+            }));
+
+            printOrders.add(PrintOrderDTO.builder().orderNum(order.getOrderNum())
+                    .customerName(order.getCustomer().getName()).orderTime(order.getOrderTime()).orderDinners(printOrderDinners)
+                    .address(order.getAddress()).deliveredTime(order.getDeliveredTime()).wantedDeliveredTime(order.getWantedDeliveredTime())
+                    .state(order.getState()).totalPrice(order.getTotalPrice()).build());
+        });
+
+        return PrintCustomerDTO.builder().customerNum(customer.getCustomerNum()).cardNum(customer.getCardNum()).address(customer.getAddress())
+                .name(customer.getName()).orders(printOrders).build();
+    }
+
+    public PrintCustomerDTO findOne(Integer num) {
         Customer customer = customerRepo.findById(num)
                 .orElseThrow(() -> new ResourceNotFoundException("번호가 "+num+"인 고객이 존재하지 않습니다."));
 
-        return customer;
+        return getPrintCustomerDTO(customer);
     }
 
     public Customer login(Map<String, String> loginInfo) {
@@ -55,12 +73,16 @@ public class CustomerService {
         return customer;
     }
 
-    public Customer insert(InsertCustomerDTO customerDTO) {
-        if (customerRepo.findById(customerDTO.getId()).isPresent()) {
+    public void checkDuplicate(String id){
+        if (customerRepo.findById(id).isPresent()) {
             throw new DuplicateKeyException("아이디가 존재합니다.");
         }
+    }
 
+    public Customer insert(InsertCustomerDTO customerDTO) {
         Customer newCustomer = CustomerMapper.INSTANCE.toEntity(customerDTO);
+
+        checkDuplicate(newCustomer.getId());
 
         newCustomer.setPw(passwordEncoder.encode(newCustomer.getPw()));
         newCustomer.setCreatedAt(new Date());

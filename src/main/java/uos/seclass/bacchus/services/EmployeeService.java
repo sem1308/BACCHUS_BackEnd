@@ -46,6 +46,12 @@ public class EmployeeService {
         return employee;
     }
 
+    private void checkApproved(Employee employee){
+        if(!employee.isApproved()) {
+            throw new ResourceNotFoundException("가입이 완료되지 않았습니다.");
+        }
+    }
+
     public Employee login(Map<String, String> loginInfo) {
         Employee employee = employeeRepo.findById(loginInfo.get("id"))
                 .orElseThrow(() -> new ResourceNotFoundException("아이디가 존재하지 않습니다."));
@@ -55,9 +61,7 @@ public class EmployeeService {
             throw new IllegalArgumentException("비밀번호가 틀렸습니다.");
         }
 
-        if(!employee.isApproved()){
-            throw new ResourceNotFoundException("가입이 완료되지 않았습니다.");
-        }
+        checkApproved(employee);
 
         return employee;
     }
@@ -67,11 +71,11 @@ public class EmployeeService {
     }
 
     public Employee insert(InsertEmployeeDTO employeeDTO) {
-        if (checkDuplicate(employeeDTO.getId())) {
+        Employee newEmployee = EmployeeMapper.INSTANCE.toEntity(employeeDTO);
+
+        if (checkDuplicate(newEmployee.getId())) {
             throw new DuplicateKeyException("ID가 중복되었습니다.");
         }
-
-        Employee newEmployee = EmployeeMapper.INSTANCE.toEntity(employeeDTO);
 
         newEmployee.setPw(passwordEncoder.encode(newEmployee.getPw()));
         newEmployee.setEmployeedAt(new Date());

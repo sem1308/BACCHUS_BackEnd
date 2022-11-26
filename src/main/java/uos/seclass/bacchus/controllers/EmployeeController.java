@@ -54,7 +54,7 @@ public class EmployeeController {
     public ResponseEntity register(@RequestBody InsertEmployeeDTO employeeDTO) {
         ReturnMessage<Employee> msg = new ReturnMessage<>();
         Employee employee = employeeService.insert(employeeDTO);
-        msg.setMessage("회원가입이 완료되었습니다.");
+        msg.setMessage("회원가입 요청이 완료되었습니다.");
         msg.setData(employee);
         msg.setStatus(StatusEnum.OK);
 
@@ -72,11 +72,11 @@ public class EmployeeController {
         msg.setStatus(StatusEnum.OK);
 
         List<String> roles = new ArrayList<>();
-        roles.add("EMPLE");
+        roles.add("EMPLO");
         if(employee.getOccupation().equals("RM")){
             roles.add("ADMIN");
         }
-        String token = jwtTokenProvider.createToken(employee.getEmployeeNum(),employee.getId(), roles);
+        String token = jwtTokenProvider.createToken(employee.getEmployeeNum(),employee.getId(), employee.getName(),roles);
         msg.setData(token);
 
         return new ResponseEntity<>(msg, HttpStatus.OK);

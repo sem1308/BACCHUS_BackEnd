@@ -4,10 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import uos.seclass.bacchus.domains.*;
-import uos.seclass.bacchus.dtos.InsertOrderDinnerDTO;
-import uos.seclass.bacchus.dtos.InsertOrderDTO;
-import uos.seclass.bacchus.dtos.PrintDinnerFoodCountDTO;
-import uos.seclass.bacchus.dtos.UpdateOrderDTO;
+import uos.seclass.bacchus.dtos.*;
 import uos.seclass.bacchus.exceptions.ResourceNotFoundException;
 import uos.seclass.bacchus.mappers.OrderDinnerMapper;
 import uos.seclass.bacchus.mappers.OrderMapper;
@@ -38,9 +35,28 @@ public class OrderService {
         this.orderDinnerRepo = orderDinnerRepo;
     }
 
-    public List<Order> findAll() {
+    private List<PrintOrderDTO> getPrintOrderDTOs(List<Order> orders){
+        List<PrintOrderDTO> printOrders = new ArrayList<>();
+        orders.forEach(order ->{
+            HashSet<PrintOrderDinnerDTO> printOrderDinners = new HashSet<>();
+            order.getOrderDinners().forEach((orderDinner -> {
+                PrintDinnerDTO printDinnerDTO = PrintDinnerDTO.builder().dinnerNum(orderDinner.getDinner().getDinnerNum())
+                        .name(orderDinner.getDinner().getName()).build();
+                printOrderDinners.add(PrintOrderDinnerDTO.builder().dinner(printDinnerDTO)
+                        .foodCounts(orderDinner.getFoodCounts()).style(orderDinner.getStyle()).build());
+            }));
+
+            printOrders.add(PrintOrderDTO.builder().orderNum(order.getOrderNum()).customerNum(order.getCustomer().getCustomerNum())
+                    .customerName(order.getCustomer().getName()).orderTime(order.getOrderTime()).orderDinners(printOrderDinners)
+                    .address(order.getAddress()).deliveredTime(order.getDeliveredTime()).wantedDeliveredTime(order.getWantedDeliveredTime())
+                    .state(order.getState()).totalPrice(order.getTotalPrice()).cardNum(order.getCardNum()).build());
+        });
+        return printOrders;
+    }
+
+    public List<PrintOrderDTO> findAll() {
         List<Order> orders = orderRepo.findAll(Sort.by("orderNum").descending());
-        return orders;
+        return getPrintOrderDTOs(orders);
     }
 
     public Order findOne(Integer orderNum) {
@@ -50,11 +66,12 @@ public class OrderService {
     }
 
     public List<Order> findAllByCustomer(Integer num) {
-        List<Order> order = orderRepo.findByCustomer(num);
-        return order;
+        List<Order> orders = orderRepo.findByCustomer(num);
+        return orders;
     }
 
-    public Order insert(InsertOrderDTO orderDTO, Set<InsertOrderDinnerDTO> orderDinnerDTOs) {
+    private Order saveOrder(InsertOrderForm orderForm){
+        InsertOrderDTO orderDTO = orderForm.getInsertOrderDTO();
         Order newOrder = OrderMapper.INSTANCE.toEntity(orderDTO);
 
         newOrder.setCustomer(customerRepo.findById(orderDTO.getCustomerNum()).orElseThrow(() ->
@@ -64,7 +81,7 @@ public class OrderService {
         newOrder.setState("OS");
         /*
             - STATE -
-            OC : Order Canceld
+            OC : Order Cancel
             OS : Order Start
             CS : Cooking Start
             CE : Cooking End
@@ -73,6 +90,7 @@ public class OrderService {
         */
         orderRepo.save(newOrder);
 
+        Set<InsertOrderDinnerDTO> orderDinnerDTOs = orderForm.getOrderDinnerDTOs();
         orderDinnerDTOs.forEach(orderDinnerDTO -> {
             OrderDinner newOrderDinner = OrderDinnerMapper.INSTANCE.toEntity(orderDinnerDTO);
             newOrderDinner.setOrder(newOrder);
@@ -90,9 +108,11 @@ public class OrderService {
                 foodCountRepo.save(orderFoodCount);
             });
         });
+        return(newOrder);
+    }
 
-
-        return newOrder;
+    public Order insert(InsertOrderForm orderForm) {
+        return saveOrder(orderForm);
     }
 
     public Order update(Integer num, UpdateOrderDTO orderDTO) {

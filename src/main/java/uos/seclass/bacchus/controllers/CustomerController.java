@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uos.seclass.bacchus.domains.Customer;
-import uos.seclass.bacchus.domains.Order;
 import uos.seclass.bacchus.dtos.*;
 import uos.seclass.bacchus.misc.JwtTokenProvider;
 import uos.seclass.bacchus.misc.ReturnMessage;
@@ -46,31 +45,9 @@ public class CustomerController {
     @ResponseStatus(value = HttpStatus.OK)
     @ApiOperation(value = "고객 상세 조회", protocols = "http")
     public ResponseEntity<PrintCustomerDTO> lookUpMember(@PathVariable("num") Integer num) {
-        Customer customer = customerService.findOne(num);
+        PrintCustomerDTO customer = customerService.findOne(num);
 
-        PrintCustomerDTO cust = getPrintCustomerDTO(customer);
-        return new ResponseEntity<>(cust, HttpStatus.OK);
-    }
-
-    private PrintCustomerDTO getPrintCustomerDTO(Customer customer){
-        List<PrintOrderDTO> printOrders = new ArrayList<>();
-        customer.getOrders().forEach(order ->{
-            HashSet<PrintOrderDinnerDTO> printOrderDinners = new HashSet<>();
-            order.getOrderDinners().forEach((orderDinner -> {
-                PrintDinnerDTO printDinnerDTO = PrintDinnerDTO.builder().dinnerNum(orderDinner.getDinner().getDinnerNum())
-                        .name(orderDinner.getDinner().getName()).extraContent(orderDinner.getDinner().getExtraContent()).build();
-                printOrderDinners.add(PrintOrderDinnerDTO.builder().dinner(printDinnerDTO)
-                        .foodCounts(orderDinner.getFoodCounts()).style(orderDinner.getStyle()).build());
-            }));
-
-            printOrders.add(PrintOrderDTO.builder().orderNum(order.getOrderNum())
-                    .customerName(order.getCustomer().getName()).orderTime(order.getOrderTime()).orderDinners(printOrderDinners)
-                    .address(order.getAddress()).deliveredTime(order.getDeliveredTime()).wantedDeliveredTime(order.getWantedDeliveredTime())
-                    .state(order.getState()).totalPrice(order.getTotalPrice()).build());
-        });
-
-       return PrintCustomerDTO.builder().customerNum(customer.getCustomerNum()).cardNum(customer.getCardNum()).address(customer.getAddress())
-                .name(customer.getName()).orders(printOrders).build();
+        return new ResponseEntity<>(customer, HttpStatus.OK);
     }
 
     @PostMapping()
@@ -100,7 +77,7 @@ public class CustomerController {
 
         List<String> roles = new ArrayList<>();
         roles.add("CUSTO");
-        String token = jwtTokenProvider.createToken(customer.getCustomerNum(),customer.getId(), roles);
+        String token = jwtTokenProvider.createToken(customer.getCustomerNum(),customer.getId(),customer.getName(),roles);
         msg.setData(token);
 
         return new ResponseEntity<>(msg, HttpStatus.OK);

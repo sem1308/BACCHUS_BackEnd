@@ -20,10 +20,7 @@ public class AccountService {
         this.customerRepo = customerRepo;
     }
 
-    public void pay(String cardNum, int customerNum, int price){
-        String cusName = customerRepo.findById(customerNum).orElseThrow(() ->
-                new ResourceNotFoundException("고객을 찾을 수 없습니다.")).getName();
-
+    public void pay(String cusName, String cardNum, int price){
         Account account = accountRepo.findByCardNumAndOwnerName(cardNum,cusName)
                 .orElseThrow(() -> new ResourceNotFoundException("카드 정보가 없습니다."));
 

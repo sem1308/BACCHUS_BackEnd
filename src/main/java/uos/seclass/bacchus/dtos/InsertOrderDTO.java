@@ -12,6 +12,8 @@ import java.util.Date;
 public class InsertOrderDTO {
     private int customerNum;
 
+    private String customerName;
+
     private int totalPrice;
 
     private Date wantedDeliveredTime;

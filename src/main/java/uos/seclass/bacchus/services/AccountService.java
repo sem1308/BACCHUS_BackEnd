@@ -12,12 +12,10 @@ import uos.seclass.bacchus.repositories.CustomerRepository;
 @Service
 public class AccountService {
     private  final AccountRepository accountRepo;
-    private  final CustomerRepository customerRepo;
 
     @Autowired
-    public AccountService(AccountRepository accountRepo,CustomerRepository customerRepo) {
+    public AccountService(AccountRepository accountRepo) {
         this.accountRepo = accountRepo;
-        this.customerRepo = customerRepo;
     }
 
     public void pay(String cusName, String cardNum, int price){
@@ -45,8 +43,8 @@ public class AccountService {
         accountRepo.save(account);
     }
 
-    public void checkDuplicate(String cardNum){
-        if (accountRepo.findByCardNum(cardNum).isEmpty()){
+    public void checkDuplicate(String cardNum,String cusName){
+        if (accountRepo.findByCardNumAndOwnerName(cardNum,cusName).isEmpty()){
             throw new ResourceNotFoundException("카드 정보가 없습니다.");
         }
     }

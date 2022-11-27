@@ -69,6 +69,15 @@ public class OrderService {
         List<Order> orders = orderRepo.findByCustomer(num);
         return orders;
     }
+    /*
+        - STATE -
+        OC : Order Cancel
+        OR : Order Registered
+        CS : Cooking Start
+        CE : Cooking End
+        DS : Delivery Start
+        DE : Delivery End
+    */
 
     private Order saveOrder(InsertOrderForm orderForm){
         InsertOrderDTO orderDTO = orderForm.getInsertOrderDTO();
@@ -78,16 +87,7 @@ public class OrderService {
                 new ResourceNotFoundException("고객을 찾을 수 없습니다.")));
         newOrder.setOrderTime(new Date());
         newOrder.setDeliveredTime(null);
-        newOrder.setState("OS");
-        /*
-            - STATE -
-            OC : Order Cancel
-            OS : Order Start
-            CS : Cooking Start
-            CE : Cooking End
-            DS : Delivery Start
-            DE : Delivery End
-        */
+        newOrder.setState("OR");
         orderRepo.save(newOrder);
 
         Set<InsertOrderDinnerDTO> orderDinnerDTOs = orderForm.getOrderDinnerDTOs();

@@ -9,7 +9,6 @@ import uos.seclass.bacchus.domains.Dinner;
 import uos.seclass.bacchus.dtos.InsertDinnerForm;
 import uos.seclass.bacchus.dtos.PrintDinnerDTO;
 import uos.seclass.bacchus.dtos.UpdateDinnerForm;
-import uos.seclass.bacchus.dtos.UpdateFoodDTO;
 import uos.seclass.bacchus.services.DinnerService;
 
 import java.util.List;

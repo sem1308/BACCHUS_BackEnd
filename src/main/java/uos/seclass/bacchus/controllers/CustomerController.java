@@ -55,7 +55,7 @@ public class CustomerController {
     @ApiOperation(value = "고객 회원가입", protocols = "http")
     public ResponseEntity register(@RequestBody InsertCustomerDTO customerDTO) {
         ReturnMessage<Customer> msg = new ReturnMessage<>();
-        accountService.checkDuplicate(customerDTO.getCardNum());
+        accountService.checkDuplicate(customerDTO.getCardNum(),customerDTO.getName());
         Customer customer = customerService.insert(customerDTO);
         msg.setMessage("회원가입이 완료되었습니다.");
         msg.setData(customer);

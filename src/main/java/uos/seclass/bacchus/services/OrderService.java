@@ -79,7 +79,7 @@ public class OrderService {
         DE : Delivery End
     */
 
-    private Order saveOrder(InsertOrderForm orderForm){
+    public Order insert(InsertOrderForm orderForm) {
         InsertOrderDTO orderDTO = orderForm.getInsertOrderDTO();
         Order newOrder = OrderMapper.INSTANCE.toEntity(orderDTO);
 
@@ -108,11 +108,7 @@ public class OrderService {
                 foodCountRepo.save(orderFoodCount);
             });
         });
-        return(newOrder);
-    }
-
-    public Order insert(InsertOrderForm orderForm) {
-        return saveOrder(orderForm);
+        return newOrder;
     }
 
     public Order update(Integer num, UpdateOrderDTO orderDTO) {
